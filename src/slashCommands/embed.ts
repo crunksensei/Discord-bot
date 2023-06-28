@@ -1,5 +1,6 @@
-import { SlashCommandBuilder, ChannelType, TextChannel, EmbedBuilder, ColorResolvable, ApplicationCommandChoicesData } from "discord.js"
+import { SlashCommandBuilder, ChannelType, TextChannel, EmbedBuilder, ColorResolvable, ApplicationCommandChoicesData, Options } from "discord.js"
 import { SlashCommand } from "../types";
+import { url } from "inspector";
 
 const command: SlashCommand = {
   command: new SlashCommandBuilder()
@@ -25,55 +26,12 @@ const command: SlashCommand = {
     })
     .addStringOption(option => {
       return option
-        .setName("color")
-        .setDescription("Select an option or type an hex color, for example: #000000")
-        .setRequired(true)
-        .setAutocomplete(true);
-    })
-  ,
-  autocomplete: async (interaction) => {
-    try {
-      const focusedValue = interaction.options.getFocused();
-      const choices = [
-        { name: "White", value: "White" },
-        { name: "Aqua", value: "Aqua" },
-        { name: "Green", value: "Green" },
-        { name: "Blue", value: "Blue" },
-        { name: "Yellow", value: "Yellow" },
-        { name: "Purple", value: "Purple" },
-        { name: "LuminousVividPink", value: "LuminousVividPink" },
-        { name: "Fuchsia", value: "Fuchsia" },
-        { name: "Gold", value: "Gold" },
-        { name: "Orange", value: "Orange" },
-        { name: "Red", value: "Red" },
-        { name: "Grey", value: "Grey" },
-        { name: "Navy", value: "Navy" },
-        { name: "DarkAqua", value: "DarkAqua" },
-        { name: "DarkGreen", value: "DarkGreen" },
-        { name: "DarkBlue", value: "DarkBlue" },
-        { name: "DarkPurple", value: "DarkPurple" },
-        { name: "DarkVividPink", value: "DarkVividPink" },
-        { name: "DarkGold", value: "DarkGold" },
-        { name: "DarkOrange", value: "DarkOrange" },
-        { name: "DarkRed", value: "DarkRed" },
-        { name: "DarkGrey", value: "DarkGrey" },
-        { name: "DarkerGrey", value: "DarkerGrey" },
-        { name: "LightGrey", value: "LightGrey" },
-        { name: "DarkNavy", value: "DarkNavy" }
-      ];
-      let filtered: { name: string, value: string }[] = []
-      for (let i = 0; i < choices.length; i++) {
-        const choice = choices[i];
-        if (choice.name.includes(focusedValue)) filtered.push(choice);
-      }
-      await interaction.respond(
-        filtered
-      );
-    } catch (error) {
-      console.log(`Error: ${error.message}`)
-    }
-  },
+        .setName("image")
+        .setDescription("Image URL.")
+        .setRequired(false);
+    }),
   execute: async (interaction) => {
+    const imageURLs = interaction.options.get("image")?.value;
     try {
       await interaction.deferReply({ ephemeral: true });
       const options: { [key: string]: string | number | boolean } = {};
@@ -83,13 +41,13 @@ const command: SlashCommand = {
         if (element.name && element.value) options[element.name] = element.value;
       }
       const embed = new EmbedBuilder()
-        .setColor(options.color.toString() as ColorResolvable)
         .setTitle(options.title.toString())
+        .setImage(options.image.toString())
         .setDescription(options.description.toString())
-        .setAuthor({ name: interaction.client.user?.username || 'Default Name', iconURL: interaction.client.user?.avatarURL() || undefined })
+        .setAuthor({name: `${interaction.user.username}` || 'Unknown'})
         .setThumbnail(interaction.client.user?.avatarURL() || null)
-        .setTimestamp()
-        .setFooter({ text: "Test embed message", iconURL: interaction.client.user?.avatarURL() || undefined });
+        .setColor('#0047AB')
+        .setTimestamp();
       let selectedTextChannel = interaction.channel?.client.channels.cache.get(options.channel.toString()) as TextChannel
       selectedTextChannel.send({ embeds: [embed] });
       return interaction.editReply({ content: "Embed message successfully sent." })

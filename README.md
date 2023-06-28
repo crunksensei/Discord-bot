@@ -1,21 +1,22 @@
-<h1 style="text-align:center;">Discord.js v14 Bot Template</h1>
+<h1 style="text-align:center;">Discord.js v14 first bot</h1>
 
 ## Features
+ * soon to come a full list of features
 
-* 🟦 Typescript
-* 🔥 Slash commands (supports auto complete!)
-* ✉️ Message commands
-* 🕛 Cooldowns
-* 🏴 Detailed Permissions
-* 💪 Event & Command handlers
-* 🍃 MongoDB Support
 
-## Installation, Build and Run
+## Commands
+ * roll - gives you a random number
+ * ping - pong + actual ping of bot
+ * clear - clears x amount of messages
+ * embed - embed with images
+
+## How to use
+
 1) Clone the repository then create a file named `.env` and fill it out accordingly
 ```js
 TOKEN=YOURTOKENHERE
 CLIENT_ID=BOTS CLIENT ID
-PREFIX=!
+PREFIX=/
 MONGO_URI=YOUR MONGO CONNECTION STRING
 MONGO_DATABASE_NAME=YOUR DATABASE NAME
 ```
